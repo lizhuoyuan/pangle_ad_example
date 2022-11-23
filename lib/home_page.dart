@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_unionad/flutter_unionad.dart';
 
 import 'ads_config.dart';
@@ -10,13 +9,13 @@ import 'ads_config.dart';
 String _result = '';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String _adEvent = '';
-
   @override
   void initState() {
     super.initState();
@@ -39,8 +38,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 SizedBox(height: 10),
                 Text('Result: $_result'),
-                SizedBox(height: 10),
-                Text('onAdEvent: $_adEvent'),
+
                 SizedBox(height: 20),
                 ElevatedButton(
                   child: Text('初始化'),
@@ -49,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
 
-               // showSplashAd(),
+                // showSplashAd(),
                 SizedBox(height: 20),
                 // ElevatedButton(
                 //   child: Text('新插屏视频广告'),
@@ -71,13 +69,12 @@ class _HomePageState extends State<HomePage> {
                     showRewardVideoAd();
                   },
                 ),
-              ElevatedButton(
-                child: Text('展示激励视频广告'),
-                onPressed: () {
-                  FlutterUnionad.showRewardVideoAd();
-                },
-              ),
-
+                ElevatedButton(
+                  child: Text('展示激励视频广告'),
+                  onPressed: () {
+                    FlutterUnionad.showRewardVideoAd();
+                  },
+                ),
 
                 // AdBannerWidget(
                 //   posId: AdsConfig.bannerId,
@@ -141,11 +138,44 @@ class _HomePageState extends State<HomePage> {
           FlutterUnionadNetCode.NETWORK_STATE_4G,
           FlutterUnionadNetCode.NETWORK_STATE_WIFI
         ]);
+    FlutterUnionadStream.initAdStream(
+      //激励广告
+      flutterUnionadRewardAdCallBack: FlutterUnionadRewardAdCallBack(
+        onShow: () {
+          print("激励广告显示");
+        },
+        onClick: () {
+          print("激励广告点击");
+        },
+        onFail: (error) {
+          print("激励广告失败 $error");
+        },
+        onClose: () {
+          print("激励广告关闭");
+        },
+        onSkip: () {
+          print("激励广告跳过");
+        },
+        onReady: () async {
+          print("激励广告预加载准备就绪");
+
+          await FlutterUnionad.showRewardVideoAd();
+        },
+        onUnReady: () {
+          print("激励广告预加载未准备就绪");
+        },
+        onVerify: (rewardVerify, rewardAmount, rewardName, errorCode, error) {
+          print(
+              "激励广告奖励  验证结果=$rewardVerify 奖励=$rewardAmount  奖励名称$rewardName 错误吗=$errorCode 错误$error");
+        },
+      ),
+    );
     return result;
   }
 
   /// 展示激励视频广告
   Future<void> showRewardVideoAd() async {
+    print('加载激励视频广告开始');
     await FlutterUnionad.loadRewardVideoAd(
       androidCodeId: AdsConfig.rewardVideoId,
       //Android 激励视频广告id  必填
@@ -166,7 +196,6 @@ class _HomePageState extends State<HomePage> {
       mediaExtra: null, //扩展参数 选填
       //用于标注此次的广告请求用途为预加载（当做缓存）还是实时加载，
     );
-
   }
 
   /// 展示开屏广告
