@@ -20,13 +20,18 @@ class AdsConfig {
     }
   }
 
-  /// 获取 App id 5347162 5351615
+  /// 获取 App id 5347162
+  /// 自己的5351615
+  ///
   static String get appId => '5351615';
 
-  /// 获取激励视频广告位id   950461105 950236931
+  /// 自己的 950461105
+  /// 公司的 950236931
+  /// 获取激励视频广告位id
   static String get rewardVideoId => '950461105';
 
   /// 获取开屏广告位id
+  /// 自己的 888015697
   static String get splashId => '888015697';
   //
   // /// 获取插屏广告位id
