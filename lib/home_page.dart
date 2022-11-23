@@ -21,9 +21,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     init().then((value) {
-      if (value) {
-        showSplashAd();
-      }
+      print('init:$value');
     });
     //setAdEvent();
   }
@@ -50,15 +48,8 @@ class _HomePageState extends State<HomePage> {
                     init();
                   },
                 ),
-                SizedBox(height: 20),
 
-                SizedBox(height: 20),
-                ElevatedButton(
-                  child: Text('开屏广告（全屏）'),
-                  onPressed: () {
-                    showSplashAd();
-                  },
-                ),
+               // showSplashAd(),
                 SizedBox(height: 20),
                 // ElevatedButton(
                 //   child: Text('新插屏视频广告'),
@@ -75,11 +66,18 @@ class _HomePageState extends State<HomePage> {
                 // ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  child: Text('激励视频广告'),
+                  child: Text('加载激励视频广告'),
                   onPressed: () {
                     showRewardVideoAd();
                   },
                 ),
+              ElevatedButton(
+                child: Text('展示激励视频广告'),
+                onPressed: () {
+                  FlutterUnionad.showRewardVideoAd();
+                },
+              ),
+
 
                 // AdBannerWidget(
                 //   posId: AdsConfig.bannerId,
@@ -119,7 +117,7 @@ class _HomePageState extends State<HomePage> {
   Future<bool> init() async {
     bool result = await FlutterUnionad.register(
         //穿山甲广告 Android appid 必填
-        androidAppId: "5351615",
+        androidAppId: AdsConfig.appId,
         //穿山甲广告 ios appid 必填
         iosAppId: "5351615",
         //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView 选填
@@ -167,13 +165,13 @@ class _HomePageState extends State<HomePage> {
       //视屏方向 选填
       mediaExtra: null, //扩展参数 选填
       //用于标注此次的广告请求用途为预加载（当做缓存）还是实时加载，
-     );
-    await FlutterUnionad.showRewardVideoAd();
+    );
+
   }
 
   /// 展示开屏广告
-  Future<void> showSplashAd() async {
-    FlutterUnionad.splashAdView(
+  Widget showSplashAd() {
+    return FlutterUnionad.splashAdView(
       //是否使用个性化模版  设定widget宽高
       mIsExpress: true,
       //android 开屏广告广告id 必填
